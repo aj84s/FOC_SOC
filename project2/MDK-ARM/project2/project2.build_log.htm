@@ -1,0 +1,131 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: μVision V5.40.0.0
+Copyright (C) 2024 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: dfg dfgd, zdfg, LIC=7YKYW-Q3RUH-8YBVV-PW9VB-DFA80-YAINA
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Professional  Version: 5.40.0.3
+Toolchain Path:  C:\software\23.keil5\ARM\ARM_compiler_version_5\Bin
+C Compiler:      Armcc.exe V5.06 update 7 (build 960)
+Assembler:       Armasm.exe V5.06 update 7 (build 960)
+Linker/Locator:  ArmLink.exe V5.06 update 7 (build 960)
+Library Manager: ArmAr.exe V5.06 update 7 (build 960)
+Hex Converter:   FromElf.exe V5.06 update 7 (build 960)
+CPU DLL:         SARMCM3.DLL V5.40.0.3
+Dialog DLL:      DCM.DLL V1.17.5.0
+Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.3.0.0
+Dialog DLL:      TCM.DLL V1.56.4.0
+ 
+<h2>Project:</h2>
+C:\Users\86189\Desktop\课程资料\1.本科\单片机学习\32\秋招项目准备\项目2\project2\MDK-ARM\project2.uvprojx
+Project File Date:  07/15/2026
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\software\23.keil5\ARM\ARM_compiler_version_5\Bin'
+Build target 'project2'
+assembling startup_stm32g431xx.s...
+compiling stm32g4xx_hal_flash.c...
+compiling main.c...
+compiling stm32g4xx_it.c...
+compiling stm32g4xx_hal_msp.c...
+compiling stm32g4xx_hal_uart_ex.c...
+compiling stm32g4xx_hal_gpio.c...
+compiling stm32g4xx_hal_flash_ramfunc.c...
+compiling gpio.c...
+compiling usart.c...
+compiling stm32g4xx_hal.c...
+compiling stm32g4xx_hal_pwr_ex.c...
+compiling stm32g4xx_hal_flash_ex.c...
+compiling stm32g4xx_hal_rcc.c...
+compiling stm32g4xx_hal_uart.c...
+compiling stm32g4xx_hal_rcc_ex.c...
+compiling foc.c...
+user\foc\foc.c(24): warning:  #177-D: function "FOC_TIM1_Init"  was declared but never referenced
+  static void FOC_TIM1_Init(void)
+user\foc\foc.c(33): warning:  #177-D: function "FOC_ADC_Init"  was declared but never referenced
+  static void FOC_ADC_Init(void)
+user\foc\foc.c(41): warning:  #177-D: function "FOC_ClarkTransform"  was declared but never referenced
+  static void FOC_ClarkTransform(float ia, float ib, float ic,
+user\foc\foc.c(50): warning:  #177-D: function "FOC_ParkTransform"  was declared but never referenced
+  static void FOC_ParkTransform(float i_alpha, float i_beta, float theta,
+user\foc\foc.c(59): warning:  #177-D: function "FOC_PID"  was declared but never referenced
+  static float FOC_PID(float ref, float actual, float kp, float ki, float kd,
+user\foc\foc.c: 5 warnings, 0 errors
+compiling bms.c...
+user\bms\bms.c(23): warning:  #177-D: function "BMS_I2C_Soft_Init"  was declared but never referenced
+  static void BMS_I2C_Soft_Init(void)
+user\bms\bms.c(31): warning:  #177-D: function "BMS_I2C_WriteReg"  was declared but never referenced
+  static uint8_t BMS_I2C_WriteReg(uint8_t dev_addr, uint8_t reg, uint16_t data)
+user\bms\bms.c(40): warning:  #177-D: function "BMS_I2C_ReadReg"  was declared but never referenced
+  static uint16_t BMS_I2C_ReadReg(uint8_t dev_addr, uint8_t reg)
+user\bms\bms.c(50): warning:  #177-D: function "BMS_INA226_Init"  was declared but never referenced
+  static void BMS_INA226_Init(void)
+user\bms\bms.c(59): warning:  #177-D: function "BMS_CoulombCount"  was declared but never referenced
+  static void BMS_CoulombCount(int16_t current_ma)
+user\bms\bms.c(68): warning:  #177-D: function "BMS_OCV_Correct"  was declared but never referenced
+  static uint8_t BMS_OCV_Correct(void)
+user\bms\bms.c: 6 warnings, 0 errors
+compiling system_stm32g4xx.c...
+compiling stm32g4xx_hal_exti.c...
+compiling display.c...
+user\display\display.c(18): warning:  #177-D: variable "disp_buf"  was declared but never referenced
+  static uint8_t disp_buf[SSD1306_WIDTH * SSD1306_PAGES];
+user\display\display.c(28): warning:  #177-D: function "Display_WriteCmd"  was declared but never referenced
+  static void Display_WriteCmd(uint8_t cmd)
+user\display\display.c(36): warning:  #177-D: function "Display_WriteData"  was declared but never referenced
+  static void Display_WriteData(uint8_t *data, uint16_t len)
+user\display\display.c(44): warning:  #177-D: function "Display_Refresh"  was declared but never referenced
+  static void Display_Refresh(void)
+user\display\display.c(52): warning:  #177-D: function "Display_SetPixel"  was declared but never referenced
+  static void Display_SetPixel(uint8_t x, uint8_t y, uint8_t on)
+user\display\display.c: 5 warnings, 0 errors
+compiling comm.c...
+user\comm\comm.c(18): warning:  #177-D: variable "tx_buf"  was declared but never referenced
+  static uint8_t tx_buf[COMM_TX_BUF_SIZE];
+user\comm\comm.c(19): warning:  #177-D: variable "rx_buf"  was declared but never referenced
+  static uint8_t rx_buf[COMM_RX_BUF_SIZE];
+user\comm\comm.c(26): warning:  #177-D: function "Comm_USART2_Init"  was declared but never referenced
+  static void Comm_USART2_Init(void)
+user\comm\comm.c(35): warning:  #177-D: function "Comm_ParseCmd"  was declared but never referenced
+  static void Comm_ParseCmd(const char *rx_line)
+user\comm\comm.c(44): warning:  #177-D: function "Comm_FormatFrame"  was declared but never referenced
+  static uint16_t Comm_FormatFrame(Comm_Telemetry_t *data, uint8_t *buf)
+user\comm\comm.c: 5 warnings, 0 errors
+compiling stm32g4xx_hal_dma_ex.c...
+compiling stm32g4xx_hal_dma.c...
+compiling stm32g4xx_hal_cortex.c...
+compiling stm32g4xx_hal_pwr.c...
+linking...
+Program Size: Code=6174 RO-data=570 RW-data=16 ZI-data=1784  
+FromELF: creating hex file...
+"project2\project2.axf" - 0 Error(s), 21 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                https://www.keil.com/pack/ARM.CMSIS.6.3.0.pack
+                ARM::CMSIS@6.3.0
+                CMSIS (Common Microcontroller Software Interface Standard)
+   * Component: CORE Version: 6.2.0
+
+Package Vendor: Keil
+                https://www.keil.com/pack/Keil.STM32G4xx_DFP.2.2.0.pack
+                Keil::STM32G4xx_DFP@2.2.0
+                STMicroelectronics STM32G4 Series Device Support
+
+<h2>Collection of Component include folders:</h2>
+  ./RTE/_project2
+  C:/software/23.keil5/ARM/CMSIS/6.3.0/CMSIS/Core/Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE@6.2.0
+      Include file:  CMSIS/Core/Include/tz_context.h
+Build Time Elapsed:  00:00:18
+</pre>
+</body>
+</html>
