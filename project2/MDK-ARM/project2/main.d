@@ -32,7 +32,7 @@ project2\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h
 project2\main.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h
 project2\main.o: ../Core/Inc/usart.h
 project2\main.o: ../Core/Inc/gpio.h
-project2\main.o: .\user\foc\foc.h
-project2\main.o: .\user\bms\bms.h
-project2\main.o: .\user\comm\comm.h
-project2\main.o: .\user\display\display.h
+project2\main.o: ./user/foc/foc.h
+project2\main.o: ./user/bms/bms.h
+project2\main.o: ./user/comm/comm.h
+project2\main.o: ./user/display/display.h
