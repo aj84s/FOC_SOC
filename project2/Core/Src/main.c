@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -27,6 +28,7 @@
 #include "bms.h"
 #include "comm.h"
 #include "display.h"
+#include "key.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,6 +50,9 @@
 
 /* USER CODE BEGIN PV */
 
+/* 按键控制的LED闪烁状态 */
+static uint8_t  blink_mode = 0;     /* 闪烁模式标志：0-关闭  1-开启 */
+static uint32_t blink_tick = 0;     /* 闪烁计时基准 */
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -91,6 +96,8 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART2_UART_Init();
+  MX_TIM1_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -102,6 +109,46 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    /* 按键扫描与处理 */
+    uint8_t key = KEY_Scan();
+
+    switch (key)
+    {
+        case KEY1_PRESS:
+            /* KEY1: 切换LED2亮灭 */
+            HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+            break;
+
+        case KEY2_PRESS:
+            /* KEY2: 切换LED3亮灭 */
+            HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+            break;
+
+        case KEY3_PRESS:
+            /* KEY3: 启动/停止 LED2和LED3 500ms闪烁 */
+            blink_mode = !blink_mode;
+            if (!blink_mode)
+            {
+                HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_RESET);
+                HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_RESET);
+            }
+            break;
+
+        default:
+            break;
+    }
+
+    /* 闪烁处理：500ms间隔同时翻转LED2和LED3 */
+    if (blink_mode)
+    {
+        uint32_t now = HAL_GetTick();
+        if (now - blink_tick >= 500)
+        {
+            blink_tick = now;
+            HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+            HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+        }
+    }
   }
   /* USER CODE END 3 */
 }
