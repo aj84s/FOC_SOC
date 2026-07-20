@@ -21,7 +21,7 @@
 #include "tim.h"
 
 /* USER CODE BEGIN 0 */
-
+#include "BLDC_motor.h"
 /* USER CODE END 0 */
 
 TIM_HandleTypeDef htim1;
@@ -262,6 +262,12 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 }
 
 /* USER CODE BEGIN 1 */
-
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  if(htim->Instance == TIM2)
+  {
+      BLDC_Motor_Tick();
+  }
+}
 /* USER CODE END 1 */
 

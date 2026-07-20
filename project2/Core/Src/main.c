@@ -29,6 +29,7 @@
 #include "comm.h"
 #include "display.h"
 #include "key.h"
+#include "BLDC_motor.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -99,6 +100,10 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
+  BLDC_Motor_Init(&htim1);  // 初始化电机驱动，使用TIM1作为电机驱动的定时器
+
+  //开启TIM2定时器中断，用于电机换相计时
+  HAL_TIM_Base_Start_IT(&htim2);
 
   /* USER CODE END 2 */
 
@@ -114,28 +119,36 @@ int main(void)
 
     switch (key)
     {
-        case KEY1_PRESS:
-            /* KEY1: 切换LED2亮灭 */
-            HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
-            break;
+      case KEY1_PRESS:
+        /* KEY1: 切换LED2亮灭 */
+        HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+        // 顺时针单步换相
+        BLDC_Motor_SetDir(MOTOR_DIR_FORWARD);
+        BLDC_Motor_SetState(MOTOR_STATE_STEP_MOVE);
+        break;
 
-        case KEY2_PRESS:
-            /* KEY2: 切换LED3亮灭 */
-            HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
-            break;
+      case KEY2_PRESS:
+        /* KEY2: 切换LED3亮灭 */
+        HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+        // 逆时针单步换相
+        BLDC_Motor_SetDir(MOTOR_DIR_BACKWARD);
+        BLDC_Motor_SetState(MOTOR_STATE_STEP_MOVE);
+        break;
 
-        case KEY3_PRESS:
-            /* KEY3: 启动/停止 LED2和LED3 500ms闪烁 */
-            blink_mode = !blink_mode;
-            if (!blink_mode)
-            {
-                HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_RESET);
-                HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_RESET);
-            }
-            break;
+      case KEY3_PRESS:
+        /* KEY3: 启动/停止 LED2和LED3 500ms闪烁 */
+        blink_mode = !blink_mode;
+        if (!blink_mode)
+        {
+          HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_RESET);
+          HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_RESET);
+        }
+        // 根据原来的方向持续换相
+        BLDC_Motor_SetState(MOTOR_STATE_CONT_MOVE);
+        break;
 
-        default:
-            break;
+      default:
+        break;
     }
 
     /* 闪烁处理：500ms间隔同时翻转LED2和LED3 */
