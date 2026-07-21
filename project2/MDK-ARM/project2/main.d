@@ -40,4 +40,4 @@ project2\main.o: ./user/bms/bms.h
 project2\main.o: ./user/comm/comm.h
 project2\main.o: ./user/display/display.h
 project2\main.o: ./user/key/key.h
-project2\main.o: .\user\BLDC_motor\BLDC_motor.h
+project2\main.o: ./user/BLDC_motor/BLDC_motor.h

@@ -33,4 +33,4 @@ project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h
 project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h
 project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h
 project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h
-project2\tim.o: .\user\BLDC_motor\BLDC_motor.h
+project2\tim.o: ./user/BLDC_motor/BLDC_motor.h

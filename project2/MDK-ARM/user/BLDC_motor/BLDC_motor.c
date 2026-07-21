@@ -107,8 +107,8 @@ void BLDC_Motor_OnceStep(uint8_t step)
     // 关闭所有的PWM通道
     BLDC_ALLPWMChanel_OFF();
 
-    // 暂时定义占空比为42%
-    uint16_t duty = 42;
+    // 暂时定义占空比为50%
+    uint16_t duty = 50;
 
     // 设置统一占空比
     __HAL_TIM_SET_COMPARE(htim_BLDC, TIM_CHANNEL_1, duty);
