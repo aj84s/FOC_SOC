@@ -50,7 +50,6 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -110,8 +109,10 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
-    // 开环速度控制，目标机械角速度为10 rad/s
-    FOC_velocityOpenLoop(12.0f);  
+    // 开环14rad/s——最大14
+    FOC_velocityOpenLoop(10);
+
+    
 
     /* USER CODE BEGIN 3 */
     /* 按键扫描与处理 */

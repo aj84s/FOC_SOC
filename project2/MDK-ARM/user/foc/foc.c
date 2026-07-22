@@ -151,6 +151,6 @@ void FOC_velocityOpenLoop(float target_velocity)
 
     // 开环给定 Uq，Ud=0
     //float Uq = foc.voltage_power / 6.0f;
-	float Uq = 2.0f;
+		float Uq = 2.0f;
     FOC_SetPhaseVoltage(Uq, 0.0f, electrical_angle);
 }
