@@ -1,103 +1,156 @@
-/**
- ******************************************************************************
- * @file    foc.c
- * @brief   FOC 电机控制模块实现
- * @note    Clark/Park变换 + SVPWM + PID电流环
- ******************************************************************************
- */
-
-/* Includes ------------------------------------------------------------------*/
 #include "foc.h"
-#include "stm32g4xx_hal.h"
+#include "tim.h"
 #include <math.h>
-#include <stdint.h>
 
-/* Private variables ---------------------------------------------------------*/
-#define PI 3.14159265358979
-/* Private functions ---------------------------------------------------------*/
-
-/**
- * @brief  TIM1 PWM 初始化
- *         CH1/CH1N ~ CH3/CH3N 六路互补输出
- *         频率 20kHz, 死区 500ns
- */
-static void FOC_TIM1_Init(void)
+// FOC参数结构体
+FOC_Param_t foc =
 {
-    /* TODO: TIM1 高级定时器 PWM 配置 */
-}
+    .pole_pairs = 7,
+    .voltage_power = 12.0f,
+    .Uq = 3.0f
+};
 
-/**
- * @brief  ADC 电流采样初始化
- *         ADC1/ADC2 注入通道同步采样
- */
-static void FOC_ADC_Init(void)
-{
-    /* TODO: ADC 注入组同步采样配置 */
-}
+// 电机的机械角度和电角度
+float shaft_angle = 0;
+float electrical_angle = 0;
 
-/**
- * @brief  Clark 变换 (abc → αβ)
- */
-static void FOC_ClarkTransform(float ia, float ib, float ic,
-                                float *i_alpha, float *i_beta)
-{
-    /* TODO: Clark 变换实现 */
-}
-
-/**
- * @brief  Park 变换 (αβ → dq)
- */
-static void FOC_ParkTransform(float i_alpha, float i_beta, float theta,
-                               float *id, float *iq)
-{
-    /* TODO: Park 变换实现 */
-}
-
-/**
- * @brief  PID 控制器
- */
-static float FOC_PID(float ref, float actual, float kp, float ki, float kd,
-                      float *integral, float dt)
-{
-    /* TODO: PID 控制器实现 */
-    return 0.0f;
-}
-
-/* Public functions ----------------------------------------------------------*/
-
+//
 void FOC_Init(void)
 {
-    /* TODO: FOC 模块总初始化 */
+    // 高边
+	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
+
+	// 低边互补
+	HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1);
+	HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_2);
+	HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_3);
 }
 
-void FOC_CurrentLoop(void)
+// 角度归到0~2π范围内
+static float normalizeAngle(float angle)
 {
-    /* TODO: 电流环主循环 - Clark/Park/PID/iPark/SVPWM */
+    angle = fmodf(angle, TWO_PI);
+    if (angle < 0.0f)
+        angle += TWO_PI;
+    return angle;
 }
 
-void FOC_SetTargetSpeed(int16_t rpm)
+// 1. 逆帕克变换
+// 输入: Uq, Ud - 旋转坐标系下的电压分量
+//       angle_el - 电角度
+// 输出: Ualpha, Ubeta - 静止坐标系下的电压分量
+static void inversePark(
+    float Uq, float Ud, float angle_el,
+    float *Ualpha, float *Ubeta)
 {
-    /* TODO: 设置目标转速 */
+    // 逆帕克变换公式
+    *Ualpha = Ud * cos(angle_el) - Uq * sin(angle_el);
+    *Ubeta  = Ud * sin(angle_el) + Uq * cos(angle_el);
 }
 
-void FOC_Start(void)
+// 2. 逆克拉克变换
+// 输入: Ualpha, Ubeta - 静止坐标系下的电压分量
+// 输出: Ua, Ub, Uc - 三相电压
+static void inverseClarke(
+    float Ualpha, float Ubeta,
+    float *Ua, float *Ub, float *Uc)
 {
-    /* TODO: 电机启动 (对齐 → 闭环) */
+    // 逆克拉克变换公式
+    *Ua = Ualpha;
+    *Ub = -0.5f * Ualpha + (sqrt(3)/2) * Ubeta;
+    *Uc = -0.5f * Ualpha - (sqrt(3)/2) * Ubeta;
 }
 
-void FOC_Stop(void)
+// 3. 设置三相PWM占空比
+// 输入: Ua, Ub, Uc - 三相电压
+// 内置操作: 将电压转换为占空比，并设置到定时器的比较寄存器
+// 输出: 无
+void FOC_SetPWM(float Ua, float Ub, float Uc)
 {
-    /* TODO: 惯性停车 */
+    float duty_a;
+    float duty_b;
+    float duty_c;
+
+    // 将电压转换为归一化占空比
+    duty_a = Ua / foc.voltage_power;
+    duty_b = Ub / foc.voltage_power;
+    duty_c = Uc / foc.voltage_power;
+
+    // 限制占空比在0~1范围内
+    duty_a = duty_a > 1 ? 1 : (duty_a < 0 ? 0 : duty_a);
+    duty_b = duty_b > 1 ? 1 : (duty_b < 0 ? 0 : duty_b);
+    duty_c = duty_c > 1 ? 1 : (duty_c < 0 ? 0 : duty_c);
+
+    // 获取定时器的自动重装载值
+    uint32_t arr = __HAL_TIM_GET_AUTORELOAD(&htim1);
+
+    // 设置PWM占空比
+    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, duty_a*arr);
+    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, duty_b*arr);
+    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, duty_c*arr);
 }
 
-void FOC_EmergencyStop(void)
+/**
+ * @brief  设置d/q轴目标电压，生成三相PWM输出
+ * @param  Uq    q轴电压
+ * @param  Ud    d轴电压
+ * @param  angle_el 电角度(rad)
+ */
+void FOC_SetPhaseVoltage(float Uq, float Ud, float angle_el)
 {
-    /* TODO: 硬件刹车/故障保护 */
+    float Ualpha, Ubeta;
+    float Ua, Ub, Uc;
+
+    // 1. 电角度归一化至 [0, 2π)
+    angle_el = normalizeAngle(angle_el);
+
+    // 2. 反Park变换 dq -> αβ
+    inversePark(Ud, Uq, angle_el, &Ualpha, &Ubeta);
+    // 3. 反Clarke变换 αβ -> abc三相电压
+    inverseClarke(Ualpha, Ubeta, &Ua, &Ub, &Uc);
+
+    // 4. 反Clarke输出电压范围：[-Vbus/2 , +Vbus/2]
+    //PWM只能输出0~Vbus，叠加直流偏置抬升到正区间
+    float v_half = foc.voltage_power / 2.0f;
+    Ua += v_half;
+    Ub += v_half;
+    Uc += v_half;
+
+    // 5. 更新三相PWM占空比
+    FOC_SetPWM(Ua, Ub, Uc);
 }
 
-MotorParam_t FOC_GetMotorParam(void)
+/**
+ * @brief  开环速度运行函数
+ * @param  target_velocity 目标机械角速度 (rad/s)
+ * @retval 当前输出Uq电压
+ */
+void FOC_velocityOpenLoop(float target_velocity)
 {
-    /* TODO: 返回当前电机参数快照 */
-    MotorParam_t param = {0};
-    return param;
+    static uint32_t last_time = 0;
+    uint32_t now = HAL_GetTick();
+
+    // 计算周期时间 s
+    float Ts = (now - last_time) * 0.001f;
+    // 超时保护：防止第一次运行、长时间卡死造成角度跳跃
+    if (Ts <= 0.0f || Ts > 0.5f)
+    {
+        Ts = 0.001f;
+    }
+    last_time = now;
+
+    // 积分更新机械角度
+    shaft_angle += target_velocity * Ts;
+    shaft_angle = normalizeAngle(shaft_angle);
+
+    // 机械角度 -> 电角度
+    electrical_angle = shaft_angle * foc.pole_pairs;
+    electrical_angle = normalizeAngle(electrical_angle);
+
+    // 开环给定 Uq，Ud=0
+    //float Uq = foc.voltage_power / 6.0f;
+	float Uq = 2.0f;
+    FOC_SetPhaseVoltage(Uq, 0.0f, electrical_angle);
 }

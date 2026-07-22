@@ -51,9 +51,6 @@
 
 /* USER CODE BEGIN PV */
 
-/* 按键控制的LED闪烁状态 */
-static uint8_t  blink_mode = 0;     /* 闪烁模式标志：0-关闭  1-开启 */
-static uint32_t blink_tick = 0;     /* 闪烁计时基准 */
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -100,11 +97,11 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  BLDC_Motor_Init(&htim1);  // 初始化电机驱动，使用TIM1作为电机驱动的定时器
-
+  //BLDC_Motor_Init(&htim1);  // 初始化电机驱动，使用TIM1作为电机驱动的定时器
   //开启TIM2定时器中断，用于电机换相计时
-  HAL_TIM_Base_Start_IT(&htim2);
+  //HAL_TIM_Base_Start_IT(&htim2);
 
+  FOC_Init();  // 初始化FOC控制器
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -113,55 +110,42 @@ int main(void)
   {
     /* USER CODE END WHILE */
 
+    // 开环速度控制，目标机械角速度为10 rad/s
+    FOC_velocityOpenLoop(12.0f);  
+
     /* USER CODE BEGIN 3 */
     /* 按键扫描与处理 */
-    uint8_t key = KEY_Scan();
+//    uint8_t key = KEY_Scan();
 
-    switch (key)
-    {
-      case KEY1_PRESS:
-        /* KEY1: 切换LED2亮灭 */
-        HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
-        // 顺时针单步换相
-        BLDC_Motor_SetDir(MOTOR_DIR_FORWARD);
-        BLDC_Motor_SetState(MOTOR_STATE_STEP_MOVE);
-        break;
+//    switch (key)
+//    {
+//      case KEY1_PRESS:
+//        /* KEY1: 切换LED2亮灭 */
+//        HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+//        // 顺时针单步换相
+//        BLDC_Motor_SetDir(MOTOR_DIR_FORWARD);
+//        BLDC_Motor_SetState(MOTOR_STATE_STEP_MOVE);
+//        break;
 
-      case KEY2_PRESS:
-        /* KEY2: 切换LED3亮灭 */
-        HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
-        // 逆时针单步换相
-        BLDC_Motor_SetDir(MOTOR_DIR_BACKWARD);
-        BLDC_Motor_SetState(MOTOR_STATE_STEP_MOVE);
-        break;
+//      case KEY2_PRESS:
+//        /* KEY2: 切换LED3亮灭 */
+//        HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+//        // 逆时针单步换相
+//        BLDC_Motor_SetDir(MOTOR_DIR_BACKWARD);
+//        BLDC_Motor_SetState(MOTOR_STATE_STEP_MOVE);
+//        break;
 
-      case KEY3_PRESS:
-        /* KEY3: 启动/停止 LED2和LED3 500ms闪烁 */
-        blink_mode = !blink_mode;
-        if (!blink_mode)
-        {
-          HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_RESET);
-          HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_RESET);
-        }
-        // 根据原来的方向持续换相
-        BLDC_Motor_SetState(MOTOR_STATE_CONT_MOVE);
-        break;
+//      case KEY3_PRESS:
+//        /* KEY3: 启动/停止 */
+//        // 根据原来的方向持续换相
+//        BLDC_Motor_SetState(MOTOR_STATE_CONT_MOVE);
+//        break;
 
-      default:
-        break;
-    }
+//      default:
+//        break;
+//    }
 
-    /* 闪烁处理：500ms间隔同时翻转LED2和LED3 */
-    if (blink_mode)
-    {
-        uint32_t now = HAL_GetTick();
-        if (now - blink_tick >= 500)
-        {
-            blink_tick = now;
-            HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
-            HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
-        }
-    }
+
   }
   /* USER CODE END 3 */
 }
