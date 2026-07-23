@@ -30,6 +30,7 @@
 #include "display.h"
 #include "key.h"
 #include "BLDC_motor.h"
+#include "encoder.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -95,12 +96,16 @@ int main(void)
   MX_USART2_UART_Init();
   MX_TIM1_Init();
   MX_TIM2_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
   //BLDC_Motor_Init(&htim1);  // 初始化电机驱动，使用TIM1作为电机驱动的定时器
-  //开启TIM2定时器中断，用于电机换相计时
-  //HAL_TIM_Base_Start_IT(&htim2);
+  
+	//开启TIM2定时器中断
+  HAL_TIM_Base_Start_IT(&htim2);
 
   FOC_Init();  // 初始化FOC控制器
+
+  Encoder_Init();  // 初始化霍尔编码器测速
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -108,11 +113,6 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
-    // 开环14rad/s——最大14
-    FOC_velocityOpenLoop(10);
-
-    
 
     /* USER CODE BEGIN 3 */
     /* 按键扫描与处理 */
@@ -123,28 +123,22 @@ int main(void)
 //      case KEY1_PRESS:
 //        /* KEY1: 切换LED2亮灭 */
 //        HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
-//        // 顺时针单步换相
-//        BLDC_Motor_SetDir(MOTOR_DIR_FORWARD);
-//        BLDC_Motor_SetState(MOTOR_STATE_STEP_MOVE);
+//				HAL_UART_Transmit(&huart2, (uint8_t*)"Hello", 5, 100);
 //        break;
 
 //      case KEY2_PRESS:
 //        /* KEY2: 切换LED3亮灭 */
 //        HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
-//        // 逆时针单步换相
-//        BLDC_Motor_SetDir(MOTOR_DIR_BACKWARD);
-//        BLDC_Motor_SetState(MOTOR_STATE_STEP_MOVE);
+//       
 //        break;
 
 //      case KEY3_PRESS:
-//        /* KEY3: 启动/停止 */
-//        // 根据原来的方向持续换相
-//        BLDC_Motor_SetState(MOTOR_STATE_CONT_MOVE);
 //        break;
 
 //      default:
 //        break;
 //    }
+
 
 
   }

@@ -107,7 +107,7 @@ void FOC_SetPhaseVoltage(float Uq, float Ud, float angle_el)
     angle_el = normalizeAngle(angle_el);
 
     // 2. 反Park变换 dq -> αβ
-    inversePark(Ud, Uq, angle_el, &Ualpha, &Ubeta);
+    inversePark(Uq, Ud, angle_el, &Ualpha, &Ubeta);
     // 3. 反Clarke变换 αβ -> abc三相电压
     inverseClarke(Ualpha, Ubeta, &Ua, &Ub, &Uc);
 
@@ -124,24 +124,31 @@ void FOC_SetPhaseVoltage(float Uq, float Ud, float angle_el)
 
 /**
  * @brief  开环速度运行函数
- * @param  target_velocity 目标机械角速度 (rad/s)
+ * @param  target_velocity 目标机械角速度 (rpm)
  * @retval 当前输出Uq电压
  */
-void FOC_velocityOpenLoop(float target_velocity)
+void FOC_velocityOpenLoop(float target_velocity,float Uq)
 {
-    static uint32_t last_time = 0;
-    uint32_t now = HAL_GetTick();
+//		//不使用TIM中断时
+//    static uint32_t last_time = 0;
+//    uint32_t now = HAL_GetTick();
 
-    // 计算周期时间 s
-    float Ts = (now - last_time) * 0.001f;
-    // 超时保护：防止第一次运行、长时间卡死造成角度跳跃
-    if (Ts <= 0.0f || Ts > 0.5f)
-    {
-        Ts = 0.001f;
-    }
-    last_time = now;
-
-    // 积分更新机械角度
+//    // 计算周期时间 s
+//    float Ts = (now - last_time) * 0.001f;
+//    // 超时保护：防止第一次运行、长时间卡死造成角度跳跃
+//    if (Ts <= 0.0f || Ts > 0.5f)
+//    {
+//        Ts = 0.001f;
+//    }
+//    last_time = now;
+	
+		//使用TIM中断时,Ts固定为时钟周期
+		float Ts = 0.0001f;
+		
+    // rpm —— rad/s
+		target_velocity = target_velocity/60.0f*6.28f;
+	
+		// 积分更新机械角度
     shaft_angle += target_velocity * Ts;
     shaft_angle = normalizeAngle(shaft_angle);
 
@@ -150,7 +157,6 @@ void FOC_velocityOpenLoop(float target_velocity)
     electrical_angle = normalizeAngle(electrical_angle);
 
     // 开环给定 Uq，Ud=0
-    //float Uq = foc.voltage_power / 6.0f;
-		float Uq = 2.0f;
+		//float Uq = 2.3f;
     FOC_SetPhaseVoltage(Uq, 0.0f, electrical_angle);
 }

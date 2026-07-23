@@ -33,4 +33,8 @@ project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h
 project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h
 project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h
 project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h
+project2\tim.o: C:\software\23.keil5\ARM\ARM_compiler_version_5\Bin\..\include\stdio.h
 project2\tim.o: ./user/BLDC_motor/BLDC_motor.h
+project2\tim.o: ./user/foc/foc.h
+project2\tim.o: C:\software\23.keil5\ARM\ARM_compiler_version_5\Bin\..\include\math.h
+project2\tim.o: ./user/encoder/encoder.h

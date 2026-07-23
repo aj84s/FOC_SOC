@@ -6,7 +6,7 @@
 [![Core](https://img.shields.io/badge/Core-Cortex--M4F%20170MHz-green)]()
 [![RTOS](https://img.shields.io/badge/RTOS-FreeRTOS%2010.3.1-orange)]()
 [![IDE](https://img.shields.io/badge/IDE-Keil%20MDK--ARM-red)]()
-[![Status](https://img.shields.io/badge/Status-Phase%200%20%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD-lightgrey)]()
+[![Status](https://img.shields.io/badge/Status-Phase%201%20%E7%94%B5%E6%9C%BA%E6%8E%A7%E5%88%B6-blue)]()
 [![License](https://img.shields.io/badge/License-MIT-yellow)]()
 
 ---
@@ -79,7 +79,7 @@
 │   │   └── Src/                 # main.c + HAL配置源文件 + 模块源文件
 │   ├── Drivers/                 # CMSIS + STM32G4xx HAL库
 │   └── MDK-ARM/                 # Keil工程文件
-├── 开发日志/                     # 每日开发记录 + TODO
+├── docs/开发日志/                  # 每日开发记录 + TODO
 └── 项目1参考资料/                # P1项目参考
 ```
 
@@ -116,8 +116,8 @@ cd 项目2
 
 | Phase | 目标 | 时间 | 状态 |
 |-------|------|------|------|
-| **Phase 0** | 基础设施：文档+硬件采购+CubeMX骨架+点灯 | 07-14 → 07-17 | ⏳ 进行中 |
-| **Phase 1** | 电机控制：6步换相→速度闭环→FOC升级 | 07-17 → 07-31 | ⬜ 待开始 |
+| **Phase 0** | 基础设施：文档+硬件采购+CubeMX骨架+点灯 | 07-14 → 07-17 | ✅ 已完成 |
+| **Phase 1** | 电机控制：6步换相→速度闭环→FOC升级 | 07-17 → 07-31 | ⏳ 进行中 |
 | **Phase 2** | 电池监测：INA226驱动→库仑计数→OCV校正→OLED | 08-01 → 08-14 | ⬜ 待开始 |
 | **Phase 3** | 融合完善：电机补偿→串口上报→可靠性→文档 | 08-15 → 08-25 | ⬜ 待开始 |
 
@@ -142,4 +142,4 @@ MIT License — 详见 [LICENSE](LICENSE)
 
 ---
 
-*最后更新: 2026-07-15 | 作者: [@ayi](https://github.com/ayi)*
+*最后更新: 2026-07-23 | 作者: [@ayi](https://github.com/ayi)*

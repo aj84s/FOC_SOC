@@ -15,6 +15,6 @@ typedef struct
 }FOC_Param_t;
 
 void FOC_Init(void);
-void FOC_velocityOpenLoop(float target_velocity);
+void FOC_velocityOpenLoop(float target_velocity,float Uq);
 
 #endif

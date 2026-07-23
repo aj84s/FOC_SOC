@@ -30,7 +30,8 @@
 "project2\display.o"
 "project2\key.o"
 "project2\bldc_motor.o"
---strict --scatter "project2\project2.sct"
+"project2\encoder.o"
+--library_type=microlib --strict --scatter "project2\project2.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
 --list "project2.map" -o project2\project2.axf
