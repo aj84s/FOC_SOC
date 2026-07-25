@@ -8,48 +8,54 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "bms.h"
-#include "stm32g4xx_hal.h"
-#include <stdint.h>
-#include <string.h>
+#include "i2c.h"
+#include <stdio.h>
 
-/* Private variables ---------------------------------------------------------*/
+/* Private defines -----------------------------------------------------------*/
+#define INA226_CONFIG    0x4527   /* 16avg, 1.1ms, shunt&bus 连续 */
+#define INA226_MANUF_ID  0x5449   /* 制造商ID，用于I2C通信验证 */
 
 /* Private functions ---------------------------------------------------------*/
 
 /**
- * @brief  软件 I2C 初始化 (GPIO模拟)
- *         SCL: 待定, SDA: 待定
+ * @brief  INA226 写16位寄存器 (HAL I2C1)
  */
-static void BMS_I2C_Soft_Init(void)
+static HAL_StatusTypeDef INA226_WriteReg(uint8_t reg, uint16_t data)
 {
-    /* TODO: 软件 I2C GPIO 初始化 */
+    uint8_t buf[3] = {reg, data >> 8, data & 0xFF};
+    return HAL_I2C_Master_Transmit(&hi2c1, INA226_ADDR, buf, 3, 10);
 }
 
 /**
- * @brief  软件 I2C 写寄存器 (INA226)
+ * @brief  INA226 读16位寄存器 (HAL I2C1)
  */
-static uint8_t BMS_I2C_WriteReg(uint8_t dev_addr, uint8_t reg, uint16_t data)
+static uint16_t INA226_ReadReg(uint8_t reg)
 {
-    /* TODO: 软件 I2C 写时序 */
-    return 0;
-}
-
-/**
- * @brief  软件 I2C 读寄存器 (INA226)
- */
-static uint16_t BMS_I2C_ReadReg(uint8_t dev_addr, uint8_t reg)
-{
-    /* TODO: 软件 I2C 读时序 */
-    return 0;
+    uint8_t buf[2] = {0};
+    HAL_I2C_Master_Transmit(&hi2c1, INA226_ADDR, &reg, 1, 10);
+    HAL_I2C_Master_Receive(&hi2c1, INA226_ADDR, buf, 2, 10);
+    return ((uint16_t)buf[0] << 8) | buf[1];
 }
 
 /**
  * @brief  INA226 初始化配置
- *         16次平均, 1.1ms转换时间, 连续模式
+ *         先读 Manuf ID 验证I2C通信 → 再写Config寄存器
+ * @retval 1=成功, 0=失败
  */
-static void BMS_INA226_Init(void)
+static uint8_t BMS_INA226_Init(void)
 {
-    /* TODO: INA226 配置寄存器写入 */
+    /* 1. 读 Manufacturer ID (0xFE) 验证 I2C 通信 */
+    uint16_t id = INA226_ReadReg(0xFE);
+    if (id != INA226_MANUF_ID)
+    {
+        printf("INA226 err:0x%04X\r\n", id);
+        return 0;
+    }
+
+    /* 2. 写配置寄存器: 16avg, 1.1ms转换, shunt&bus连续模式 */
+    INA226_WriteReg(0x00, INA226_CONFIG);
+
+    return 1;
 }
 
 /**
@@ -59,6 +65,7 @@ static void BMS_INA226_Init(void)
 static void BMS_CoulombCount(int16_t current_ma)
 {
     /* TODO: 库仑计数累积 */
+    (void)current_ma;
 }
 
 /**
@@ -73,46 +80,81 @@ static uint8_t BMS_OCV_Correct(void)
 
 /* Public functions ----------------------------------------------------------*/
 
-void BMS_Init(void)
+/**
+ * @brief  BMS 模块初始化
+ * @retval 1=成功, 0=INA226通信异常
+ */
+uint8_t BMS_Init(void)
 {
-    /* TODO: BMS 模块初始化 */
+    return BMS_INA226_Init();
 }
 
+/**
+ * @brief  BMS 主任务 (100ms 周期: 读电压/电流并打印)
+ */
 void BMS_Task(void)
 {
-    /* TODO: 100ms 周期任务: 读电压/电流 → 库仑计数 → SOC估算 */
+    uint16_t v = BMS_ReadBusVoltage();
+    int16_t  i = BMS_ReadBusCurrent();
+    printf("V:%dmV I:%dmA\r\n", v, i);
 }
 
+/**
+ * @brief  获取当前电池数据快照
+ */
 BMS_Data_t BMS_GetData(void)
 {
-    /* TODO: 返回当前电池数据快照 */
-    BMS_Data_t data = {0};
+    BMS_Data_t data;
+    data.bus_voltage    = BMS_ReadBusVoltage();
+    data.current        = BMS_ReadBusCurrent();
+    data.power          = (int32_t)data.bus_voltage * data.current / 1000;
+    data.soc            = 0;
+    data.coulomb_counter = 0;
+    data.temperature    = 0;
+    data.state          = BMS_STATE_NORMAL;
     return data;
 }
 
+/**
+ * @brief  读 INA226 总线电压
+ * @retval 总线电压 (mV), LSB=1.25mV
+ */
 uint16_t BMS_ReadBusVoltage(void)
 {
-    /* TODO: 读 INA226 总线电压寄存器 (0x02) */
-    return 0;
+    uint16_t raw = INA226_ReadReg(0x02);
+    return (uint16_t)(raw * 1.25f);
 }
 
-int16_t BMS_ReadCurrent(void)
+/**
+ * @brief  读 INA226 分流电压 → 换算电流
+ * @retval 电流 (mA), 正=放电
+ * @note   Rshunt=0.1Ω, Shunt LSB=2.5μV
+ *         I(mA) = raw × 2.5μV / 0.1Ω = raw × 0.025
+ */
+int16_t BMS_ReadBusCurrent(void)
 {
-    /* TODO: 读 INA226 分流电压 (0x01) → 换算电流 */
-    return 0;
+    int16_t raw = (int16_t)INA226_ReadReg(0x01);
+    return (int16_t)(raw * 0.025f);
 }
 
+/**
+ * @brief  SOC 估算 (库仑计数 + OCV 校正融合)
+ */
 uint8_t BMS_EstimateSOC(void)
 {
-    /* TODO: SOC 估算 (库仑计数 + OCV 校正融合) */
+    /* TODO: SOC 估算 */
     return 0;
 }
 
+/**
+ * @brief  电机参数补偿 (SOC/RPM → 补偿系数)
+ *         电池电压随 SOC 下降 → 相同PWM占空比下转矩下降
+ *         补偿策略: 低 SOC 时适当增大 Iq 参考值
+ */
 float BMS_GetMotorCompensation(uint8_t soc, int16_t rpm)
 {
-    /* TODO: 核心算法 — 根据 SOC 和转速计算电机补偿系数
-     *       电池电压随 SOC 下降 → 相同 PWM 占空比下电机转矩下降
-     *       补偿策略: 低 SOC 时适当增大 Iq 参考值
-     */
+    /* TODO: 补偿算法 */
+    (void)soc;
+    (void)rpm;
     return 1.0f;
 }

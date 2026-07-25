@@ -18,6 +18,10 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "adc.h"
+#include "dma.h"
+#include "i2c.h"
+#include "opamp.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -31,6 +35,7 @@
 #include "key.h"
 #include "BLDC_motor.h"
 #include "encoder.h"
+#include "current.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -93,10 +98,17 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_USART2_UART_Init();
   MX_TIM1_Init();
   MX_TIM2_Init();
   MX_TIM3_Init();
+  MX_I2C1_Init();
+  MX_ADC1_Init();
+  MX_ADC2_Init();
+  MX_OPAMP1_Init();
+  MX_OPAMP2_Init();
+  MX_OPAMP3_Init();
   /* USER CODE BEGIN 2 */
   //BLDC_Motor_Init(&htim1);  // 初始化电机驱动，使用TIM1作为电机驱动的定时器
   
@@ -106,6 +118,13 @@ int main(void)
   FOC_Init();  // 初始化FOC控制器
 
   Encoder_Init();  // 初始化霍尔编码器测速
+
+  BMS_Init();      // 初始化INA226电池监测
+
+  Current_Init();  // 启动ADC-DMA三相电流采集
+  Current_Calibrate();  // 零偏校准 (静止无电流时采100次)
+
+  HAL_UART_Receive_IT(&huart2, rx_buf, 1);  // 启动串口中断接收
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -116,28 +135,21 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     /* 按键扫描与处理 */
-//    uint8_t key = KEY_Scan();
+    uint8_t key = KEY_Scan();
 
-//    switch (key)
-//    {
-//      case KEY1_PRESS:
-//        /* KEY1: 切换LED2亮灭 */
-//        HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
-//				HAL_UART_Transmit(&huart2, (uint8_t*)"Hello", 5, 100);
-//        break;
+    switch (key)
+    {
+			case KEY1_PRESS:
+        BMS_Init();
+        break;
+			
+      case KEY3_PRESS:
+        FOC_Motor_Toggle();
+        break;
 
-//      case KEY2_PRESS:
-//        /* KEY2: 切换LED3亮灭 */
-//        HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
-//       
-//        break;
-
-//      case KEY3_PRESS:
-//        break;
-
-//      default:
-//        break;
-//    }
+      default:
+        break;
+    }
 
 
 

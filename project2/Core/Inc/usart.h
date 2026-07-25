@@ -41,7 +41,9 @@ extern UART_HandleTypeDef huart2;
 void MX_USART2_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+extern volatile float target_rpm;
+extern volatile float target_Uq;
+extern uint8_t rx_buf[16];
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

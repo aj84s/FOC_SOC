@@ -17,4 +17,7 @@ typedef struct
 void FOC_Init(void);
 void FOC_velocityOpenLoop(float target_velocity,float Uq);
 
+extern uint8_t motor_enable;
+void FOC_Motor_Toggle(void);
+
 #endif

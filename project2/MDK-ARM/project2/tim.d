@@ -23,10 +23,17 @@ project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_gpio_ex.h
 project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h
 project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h
 project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h
+project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h
+project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h
+project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h
 project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h
 project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h
 project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h
 project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h
+project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_i2c.h
+project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_i2c_ex.h
+project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h
+project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h
 project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h
 project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h
 project2\tim.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h
@@ -38,3 +45,6 @@ project2\tim.o: ./user/BLDC_motor/BLDC_motor.h
 project2\tim.o: ./user/foc/foc.h
 project2\tim.o: C:\software\23.keil5\ARM\ARM_compiler_version_5\Bin\..\include\math.h
 project2\tim.o: ./user/encoder/encoder.h
+project2\tim.o: ../Core/Inc/usart.h
+project2\tim.o: ./user/bms/bms.h
+project2\tim.o: ./user/foc/current.h

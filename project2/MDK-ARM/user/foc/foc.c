@@ -5,14 +5,21 @@
 // FOC参数结构体
 FOC_Param_t foc =
 {
-    .pole_pairs = 7,
-    .voltage_power = 12.0f,
+    .pole_pairs = 2,
+    .voltage_power = 24.0f,
     .Uq = 3.0f
 };
 
 // 电机的机械角度和电角度
 float shaft_angle = 0;
 float electrical_angle = 0;
+
+// 目标转速和目标电压
+volatile float target_rpm = 500.0f;
+volatile float target_Uq  = 6.0f;
+
+// 电机启停状态
+uint8_t motor_enable = 0;
 
 //
 void FOC_Init(void)
@@ -143,7 +150,7 @@ void FOC_velocityOpenLoop(float target_velocity,float Uq)
 //    last_time = now;
 	
 		//使用TIM中断时,Ts固定为时钟周期
-		float Ts = 0.0001f;
+		float Ts = 0.001f;   // TIM2 = 1kHz
 		
     // rpm —— rad/s
 		target_velocity = target_velocity/60.0f*6.28f;
@@ -159,4 +166,19 @@ void FOC_velocityOpenLoop(float target_velocity,float Uq)
     // 开环给定 Uq，Ud=0
 		//float Uq = 2.3f;
     FOC_SetPhaseVoltage(Uq, 0.0f, electrical_angle);
+}
+
+/**
+ * @brief  电机启停切换
+ * @note   KEY3触发，停止时关断三相PWM
+ */
+void FOC_Motor_Toggle(void)
+{
+    motor_enable = !motor_enable;
+    if (!motor_enable)
+    {
+        __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0);
+        __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 0);
+        __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 0);
+    }
 }

@@ -22,6 +22,12 @@
 
 /* USER CODE BEGIN 0 */
 #include <stdio.h>
+#include <stdlib.h>
+
+#define RX_BUF_SIZE 16
+uint8_t rx_buf[RX_BUF_SIZE];
+static uint8_t rx_idx = 0;
+
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart2;
@@ -146,6 +152,31 @@ int fputc(int ch, FILE *f)
     (void)f;
     HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
     return ch;
+}
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+    if (huart->Instance == USART2)
+    {
+        uint8_t ch = rx_buf[rx_idx];
+
+        if (ch == '\r' || ch == '\n')
+        {
+            rx_buf[rx_idx] = '\0';
+            int val = atoi((char *)rx_buf);
+            if (val > 0)
+            {
+                target_rpm = (float)val;
+            }
+            rx_idx = 0;
+        }
+        else if (rx_idx < RX_BUF_SIZE - 1)
+        {
+            rx_idx++;
+        }
+
+        HAL_UART_Receive_IT(&huart2, &rx_buf[rx_idx], 1);
+    }
 }
 /* USER CODE END 1 */
 

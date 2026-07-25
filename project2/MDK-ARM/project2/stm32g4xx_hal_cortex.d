@@ -21,10 +21,17 @@ project2\stm32g4xx_hal_cortex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_h
 project2\stm32g4xx_hal_cortex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma.h
 project2\stm32g4xx_hal_cortex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_dma_ex.h
 project2\stm32g4xx_hal_cortex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_cortex.h
+project2\stm32g4xx_hal_cortex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc.h
+project2\stm32g4xx_hal_cortex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_adc.h
+project2\stm32g4xx_hal_cortex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_adc_ex.h
 project2\stm32g4xx_hal_cortex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_exti.h
 project2\stm32g4xx_hal_cortex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash.h
 project2\stm32g4xx_hal_cortex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ex.h
 project2\stm32g4xx_hal_cortex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_flash_ramfunc.h
+project2\stm32g4xx_hal_cortex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_i2c.h
+project2\stm32g4xx_hal_cortex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_i2c_ex.h
+project2\stm32g4xx_hal_cortex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp.h
+project2\stm32g4xx_hal_cortex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_opamp_ex.h
 project2\stm32g4xx_hal_cortex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr.h
 project2\stm32g4xx_hal_cortex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_pwr_ex.h
 project2\stm32g4xx_hal_cortex.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h

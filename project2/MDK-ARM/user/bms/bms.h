@@ -48,12 +48,13 @@ typedef struct {
 #define BMS_CAPACITY_MAH     2200    /* 标称容量 */
 
 /* INA226 I2C 地址 */
-#define INA226_ADDR          0x40    /* A0=A1=GND */
+#define INA226_ADDR          (0x40 << 1)  /* 7位地址0x40, HAL要求左移1位 */
 
 /* Exported functions --------------------------------------------------------*/
 
-/** @brief BMS 模块初始化 (INA226 + 校准) */
-void BMS_Init(void);
+/** @brief BMS 模块初始化 (INA226 + 校准)
+ *  @retval 1=成功, 0=INA226通信异常 */
+uint8_t BMS_Init(void);
 
 /** @brief BMS 主任务 (100ms 周期) */
 void BMS_Task(void);
@@ -65,7 +66,7 @@ BMS_Data_t BMS_GetData(void);
 uint16_t BMS_ReadBusVoltage(void);
 
 /** @brief 读取 INA226 电流 (mA) */
-int16_t BMS_ReadCurrent(void);
+int16_t BMS_ReadBusCurrent(void);
 
 /** @brief 估算 SOC (库仑计数 + 开路电压校正) */
 uint8_t BMS_EstimateSOC(void);

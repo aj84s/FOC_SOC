@@ -25,6 +25,9 @@
 #include "BLDC_motor.h"
 #include "foc.h"
 #include "encoder.h"
+#include "usart.h"
+#include "bms.h"
+#include "current.h"
 /* USER CODE END 0 */
 
 TIM_HandleTypeDef htim1;
@@ -57,7 +60,7 @@ void MX_TIM1_Init(void)
   {
     Error_Handler();
   }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
   sMasterConfig.MasterOutputTrigger2 = TIM_TRGO2_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
@@ -385,18 +388,28 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   {
     static uint16_t print_tick = 0;
 
-    //BLDC_Motor_Tick();
-    FOC_velocityOpenLoop(1000, 2.0f);
+    if (motor_enable)
+    {
+        FOC_velocityOpenLoop(target_rpm, target_Uq);
+    }
 
-    /* 每1000ms打印一次转速 (TIM2=1kHz, 降频到2Hz) */
+    /* 每100ms打印一次转速 (TIM2=1kHz, 降频到2Hz) */
     print_tick++;
-    if (print_tick >= 1000)
+    if (print_tick >= 10)
     {
       print_tick = 0;
-      printf("Speed: %.1f RPM, Hall: %d, Dir: %d\r\n",
-             Encoder_GetSpeed(),
-             Encoder_GetHallState(),
-             encoder.direction);
+
+      // 读取三相电路
+      float Ia, Ib, Ic;
+      // 读取三相绕组电流
+      Current_ReadAll(&Ia, &Ib, &Ic);
+
+      // VOFA JustFloat输出：转速(rpm),母线电压(V),母线电流(A),Ia,Ib,Ic(A)
+      printf("%.1f,%.2f,%.3f,%.2f,%.2f,%.2f\r\n",
+            Encoder_GetSpeed(),
+            (float)BMS_ReadBusVoltage() / 1000.0f,
+            (float)BMS_ReadBusCurrent() / 1000.0f,
+            Ia, Ib, Ic);
     }
   }
 }
