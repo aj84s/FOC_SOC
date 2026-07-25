@@ -42,3 +42,4 @@ project2\foc.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h
 project2\foc.o: ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h
 project2\foc.o: C:\software\23.keil5\ARM\ARM_compiler_version_5\Bin\..\include\math.h
 project2\foc.o: ../Core/Inc/tim.h
+project2\foc.o: user\foc\current.h

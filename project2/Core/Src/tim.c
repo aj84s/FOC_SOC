@@ -390,26 +390,38 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
     if (motor_enable)
     {
-        FOC_velocityOpenLoop(target_rpm, target_Uq);
+        FOC_CurrentLoop(target_iq);  /* 电流闭环 */
     }
 
     /* 每100ms打印一次转速 (TIM2=1kHz, 降频到2Hz) */
     print_tick++;
-    if (print_tick >= 10)
+    if (print_tick >= 100)
     {
       print_tick = 0;
 
-      // 读取三相电路
+      // 读取三相电流
       float Ia, Ib, Ic;
-      // 读取三相绕组电流
       Current_ReadAll(&Ia, &Ib, &Ic);
 
-      // VOFA JustFloat输出：转速(rpm),母线电压(V),母线电流(A),Ia,Ib,Ic(A)
-      printf("%.1f,%.2f,%.3f,%.2f,%.2f,%.2f\r\n",
-            Encoder_GetSpeed(),
-            (float)BMS_ReadBusVoltage() / 1000.0f,
-            (float)BMS_ReadBusCurrent() / 1000.0f,
-            Ia, Ib, Ic);
+      // Clarke + Park 正变换 → Id, Iq
+      float Id, Iq;
+      FOC_Current2DQ(Ia, Ib, Ic, electrical_angle, &Id, &Iq);
+			
+			// 调试P，临时引用
+			extern float PID_Pvalue_Q;
+			
+			printf("%.1f,%.2f,%.3f,%.2f,%.2f,%.2f,%.2f,%.2f\r\n",
+			Encoder_GetSpeed(),
+			0.0f,
+			PID_Pvalue_Q,
+			Ia, Ib, Ic, Id, Iq);
+			
+      // VOFA JustFloat输出：转速,母线电压,母线电流,Ia,Ib,Ic,Id,Iq
+//      printf("%.1f,%.2f,%.3f,%.2f,%.2f,%.2f,%.2f,%.2f\r\n",
+//            Encoder_GetSpeed(),
+//            (float)BMS_ReadBusVoltage() / 1000.0f,
+//            (float)BMS_ReadBusCurrent() / 1000.0f,
+//            Ia, Ib, Ic, Id, Iq);
     }
   }
 }

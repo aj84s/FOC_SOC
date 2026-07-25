@@ -1,7 +1,7 @@
 Dependencies for Project 'project2', Target 'project2': (DO NOT MODIFY !)
 CompilerVersion: 5060960::V5.06 update 7 (build 960)::.\ARM_compiler_version_5
 F (startup_stm32g431xx.s)(0x6A64A636)(--cpu Cortex-M4.fp.sp -g --apcs=interwork --pd "__MICROLIB SETA 1"-I.\RTE\_project2-IC:\software\23.keil5\ARM\CMSIS\6.3.0\CMSIS\Core\Include--pd "__UVISION_VERSION SETA 540" --pd "STM32G431xx SETA 1" --pd "_RTE_ SETA 1"--list startup_stm32g431xx.lst --xref -o project2\startup_stm32g431xx.o --depend project2\startup_stm32g431xx.d)
-F (../Core/Src/main.c)(0x6A64A8EC)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ./user/bms -I ./user/comm -I ./user/display -I ./user/foc -I ./user/key -I ./user/BLDC_motor -I ./user/encoder-I.\RTE\_project2-IC:\software\23.keil5\ARM\CMSIS\6.3.0\CMSIS\Core\Include-D__UVISION_VERSION="540" -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o project2\main.o --omf_browse project2\main.crf --depend project2\main.d)
+F (../Core/Src/main.c)(0x6A64C9DA)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ./user/bms -I ./user/comm -I ./user/display -I ./user/foc -I ./user/key -I ./user/BLDC_motor -I ./user/encoder-I.\RTE\_project2-IC:\software\23.keil5\ARM\CMSIS\6.3.0\CMSIS\Core\Include-D__UVISION_VERSION="540" -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o project2\main.o --omf_browse project2\main.crf --depend project2\main.d)
 I (../Core/Inc/main.h)(0x6A606E4B)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x6A577E90)
 I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6A647D91)
@@ -48,7 +48,7 @@ I (../Core/Inc/opamp.h)(0x6A647D8E)
 I (../Core/Inc/tim.h)(0x6A62071F)
 I (../Core/Inc/usart.h)(0x6A63065A)
 I (../Core/Inc/gpio.h)(0x6A577EA3)
-I (./user/foc/foc.h)(0x6A630B55)
+I (./user/foc/foc.h)(0x6A64BF55)
 I (C:\software\23.keil5\ARM\ARM_compiler_version_5\include\math.h)(0x5E8E3CC2)
 I (./user/bms/bms.h)(0x6A648B9A)
 I (./user/comm/comm.h)(0x6A57831C)
@@ -262,7 +262,7 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x6A577E90)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x6A577E90)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x6A577E90)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x6A577E90)
-F (../Core/Src/tim.c)(0x6A64AD11)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ./user/bms -I ./user/comm -I ./user/display -I ./user/foc -I ./user/key -I ./user/BLDC_motor -I ./user/encoder-I.\RTE\_project2-IC:\software\23.keil5\ARM\CMSIS\6.3.0\CMSIS\Core\Include-D__UVISION_VERSION="540" -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o project2\tim.o --omf_browse project2\tim.crf --depend project2\tim.d)
+F (../Core/Src/tim.c)(0x6A64CA5A)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ./user/bms -I ./user/comm -I ./user/display -I ./user/foc -I ./user/key -I ./user/BLDC_motor -I ./user/encoder-I.\RTE\_project2-IC:\software\23.keil5\ARM\CMSIS\6.3.0\CMSIS\Core\Include-D__UVISION_VERSION="540" -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o project2\tim.o --omf_browse project2\tim.crf --depend project2\tim.d)
 I (../Core/Inc/tim.h)(0x6A62071F)
 I (../Core/Inc/main.h)(0x6A606E4B)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x6A577E90)
@@ -305,7 +305,7 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x6A577E90)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x6A577E90)
 I (C:\software\23.keil5\ARM\ARM_compiler_version_5\include\stdio.h)(0x5E8E3CC2)
 I (./user/BLDC_motor/BLDC_motor.h)(0x6A606E4B)
-I (./user/foc/foc.h)(0x6A630B55)
+I (./user/foc/foc.h)(0x6A64BF55)
 I (C:\software\23.keil5\ARM\ARM_compiler_version_5\include\math.h)(0x5E8E3CC2)
 I (./user/encoder/encoder.h)(0x6A63027B)
 I (../Core/Inc/usart.h)(0x6A63065A)
@@ -1372,8 +1372,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim.h)(0x6A577E90)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_tim_ex.h)(0x6A577E90)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x6A577E90)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x6A577E90)
-F (.\user\foc\foc.c)(0x6A630B63)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ./user/bms -I ./user/comm -I ./user/display -I ./user/foc -I ./user/key -I ./user/BLDC_motor -I ./user/encoder-I.\RTE\_project2-IC:\software\23.keil5\ARM\CMSIS\6.3.0\CMSIS\Core\Include-D__UVISION_VERSION="540" -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o project2\foc.o --omf_browse project2\foc.crf --depend project2\foc.d)
-I (user\foc\foc.h)(0x6A630B55)
+F (.\user\foc\foc.c)(0x6A64C982)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ./user/bms -I ./user/comm -I ./user/display -I ./user/foc -I ./user/key -I ./user/BLDC_motor -I ./user/encoder-I.\RTE\_project2-IC:\software\23.keil5\ARM\CMSIS\6.3.0\CMSIS\Core\Include-D__UVISION_VERSION="540" -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o project2\foc.o --omf_browse project2\foc.crf --depend project2\foc.d)
+I (user\foc\foc.h)(0x6A64BF55)
 I (../Core/Inc/main.h)(0x6A606E4B)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h)(0x6A577E90)
 I (../Core/Inc/stm32g4xx_hal_conf.h)(0x6A647D91)
@@ -1415,7 +1415,8 @@ I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h)(0x6A577E90)
 I (../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h)(0x6A577E90)
 I (C:\software\23.keil5\ARM\ARM_compiler_version_5\include\math.h)(0x5E8E3CC2)
 I (../Core/Inc/tim.h)(0x6A62071F)
-F (.\user\foc\foc.h)(0x6A630B55)()
+I (user\foc\current.h)(0x6A64A8E5)
+F (.\user\foc\foc.h)(0x6A64BF55)()
 F (.\user\foc\current.c)(0x6A64A8DC)(--c99 -c --cpu Cortex-M4.fp.sp -D__MICROLIB -g -O3 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc -I ../Drivers/STM32G4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G4xx/Include -I ../Drivers/CMSIS/Include -I ./user/bms -I ./user/comm -I ./user/display -I ./user/foc -I ./user/key -I ./user/BLDC_motor -I ./user/encoder-I.\RTE\_project2-IC:\software\23.keil5\ARM\CMSIS\6.3.0\CMSIS\Core\Include-D__UVISION_VERSION="540" -DSTM32G431xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G431xx-o project2\current.o --omf_browse project2\current.crf --depend project2\current.d)
 I (user\foc\current.h)(0x6A64A8E5)
 I (../Core/Inc/main.h)(0x6A606E4B)

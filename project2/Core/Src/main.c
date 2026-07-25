@@ -136,11 +136,17 @@ int main(void)
     /* USER CODE BEGIN 3 */
     /* 按键扫描与处理 */
     uint8_t key = KEY_Scan();
-
+		
+		extern float PID_Pvalue_Q;
+		
     switch (key)
     {
 			case KEY1_PRESS:
-        BMS_Init();
+        PID_Pvalue_Q += 0.01f;
+        break;
+			
+			case KEY2_PRESS:
+        PID_Pvalue_Q -= 0.01f;
         break;
 			
       case KEY3_PRESS:
